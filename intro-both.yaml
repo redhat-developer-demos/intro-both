@@ -1,0 +1,67 @@
+# intro-both
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: intro-back 
+  name: intro-back
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+  selector:
+    app: intro-back
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: intro-front
+  name: intro-front
+spec: 
+  type: ClusterIP
+  ports:
+    - port: 8080
+  selector: 
+    app: intro-front
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intro-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intro-back
+  template:
+    metadata:
+      labels:
+        app: intro-back
+    spec:
+      containers:
+      - name: intro-back
+        image: quay.io/rhdevelopers/intro-back:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intro-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intro-front
+  template:
+    metadata:
+      labels:
+        app: intro-front
+    spec:
+      containers:
+      - name: intro-front
+        image: quay.io/rhdevelopers/intro-front:latest
+        ports:
+        - containerPort: 8080
